@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"unicode"
 )
 
 func main() {
@@ -40,30 +41,25 @@ func readPalabra(palabra *string) {
 
 func crearFrase(frase, palabra string) string {
 	nuevaFrase := frase
+	contador := 0
 	for {
-		index := strings.Index(strings.ToLower(nuevaFrase), palabra)
+		index := strings.Index(strings.ToLower(nuevaFrase[contador:]), palabra) // es en donde buscar la palabra, la palabra a buscar
+		
 		if index == -1 {
 			break
 		}
-		nuevaFrase = nuevaFrase[:index] + doyFormato(nuevaFrase[index:index+len(palabra)], palabra) + nuevaFrase[index+len(palabra):]
+		suma:= index + contador
+		nuevaFrase = nuevaFrase[:suma] + doyFormato(nuevaFrase[suma:suma+len(palabra)]) + nuevaFrase[suma+len(palabra):]
+		contador = suma+len(palabra)
 	}
 
 	return nuevaFrase
 }
 
-func doyFormato(palabraOriginal, palabraNueva string) string {
+func doyFormato(palabraOriginal string) string {
 	var nuevaPalabra strings.Builder
 	for i := 0; i < len(palabraOriginal); i++ {
-		if 'A' <= palabraOriginal[i] && palabraOriginal[i] <= 'Z' {
-			// si la letra en palabraOriginal es mayúscula, la convierte a minúscula
-			nuevaPalabra.WriteByte(palabraNueva[i] + ('a' - 'A'))
-		} else if 'a' <= palabraOriginal[i] && palabraOriginal[i] <= 'z' {
-			// si la letra en palabraOriginal es minúscula, la convierte a mayúscula
-			nuevaPalabra.WriteByte(palabraNueva[i] - ('a' - 'A'))
-		} else {
-			// si la letra no es una letra del alfabeto, la agrega tal cual
-			nuevaPalabra.WriteByte(palabraNueva[i])
-		}
+		nuevaPalabra.WriteRune(unicode.SimpleFold(rune(palabraOriginal[i])))
 	}
 	return nuevaPalabra.String()
 }
