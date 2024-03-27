@@ -1,11 +1,10 @@
-/*
-	Realice un programa que reciba una frase e imprima en pantalla la
+/* Realice las modificaciones necesarias al ejercicio anterior para que en
+lugar de reemplazar la palabra “jueves” por “martes” ahora se
+reemplace “miércoles” por “automóvil”. Piense qué impacto tuvieron
+esas modificaciones en el programa que había realizado.*/
 
-misma frase reemplazando las ocurrencias de “jueves” por “martes”
-respetando las letras minúsculas o mayúsculas de la palabra original en
-su posición correspondiente. Por ejemplo, se reemplaza “Jueves” por
-“Martes” o “jueveS” por “marteS”.
-*/
+
+
 package main
 
 import (
@@ -17,21 +16,21 @@ import (
 )
 
 func main() {
-    read(frase)
-	frase string
-	nuevaFrase := crearFrase(frase, "jueves", "martes")
+    var frase string
+	read(&frase)
+	nuevaFrase := crearFrase(frase, "miercoles", "automovil")
 	fmt.Println(nuevaFrase)
 
 }
 
-func read(frase string)  {
-    fmt.Println("ingrese una frasse con jueves")
-    reader := bufio.NewReadWriter(os.Stdin)
-    line, err := reader.ReadString('\n')
-    if err != nil{
+func read(frase *string) {
+    fmt.Println("Ingrese una frase con la palabra miercoles: ")
+    reader := bufio.NewReader(os.Stdin)
+    input, err := reader.ReadString('\n')
+    if err != nil {
         log.Fatal(err)
     }
-    
+    *frase = input // asigno el valor leído a la variable frase
 }
 
 func crearFrase(frase, palabraOriginal, palabraNueva string) string {
