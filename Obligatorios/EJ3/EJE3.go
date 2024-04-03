@@ -47,8 +47,8 @@ func crearFrase(frase, palabra string) string {
 		if index == -1 {
 			break
 		}
-		nuevaFrase.WriteString(frase[indice:indice+index])                     // parte antes de la palabra o sea de donde no hay palabra hasta la primera letra de la palabra
-		nuevaFrase.WriteString(doyFormato(frase[indice+index : indice+index+len(palabra)])) // la palabra con el formato deseado
+		nuevaFrase.WriteString(frase[indice:indice+index])           // parte antes de la palabra o sea de donde no hay palabra hasta la primera letra de la palabra
+		nuevaFrase.WriteString(doyFormato(frase[indice+index : indice+index+len(palabra)])) // la palabra con el formato deseado (o sea si esta en mayus pasa a minus y viceversa)
 		indice = indice + index + len(palabra)   // actualizamos el índice --> indice + index + la cantidad de caracteres que tenga la palabra                                      
 	}
 
@@ -59,11 +59,18 @@ func crearFrase(frase, palabra string) string {
 }
 
 
-
 func doyFormato(palabra string) string {
 	var nuevaPalabra strings.Builder
-	for i := 0; i < len(palabra); i++ { // hago un for para recorrer caracter por caracter
-		r := rune(palabra[i]) // transformo la palabra en runa
+	for _, r:= range palabra { // hago un for para recorrer caracter por caracter. como no necesito el indice del for para nada se pone _ en go
+		nuevaPalabra.WriteRune(unicode.SimpleFold(r)) // con el simplefold no necesito corroborar si es min o mayus ya que te da el inverso si o si
+	}
+	return nuevaPalabra.String()
+}
+
+/* no se usa, la forma de arriba es mejor :) no necesito preguntar nada.
+func doyFormato(palabra string) string {
+	var nuevaPalabra strings.Builder
+	for _, r:= range palabra { // hago un for para recorrer caracter por caracter
 		if unicode.IsUpper(r) { // si esta en mayuscula
 			nuevaPalabra.WriteRune(unicode.ToLower(r)) // entonces la hago minuscula
 		} else if unicode.IsLower(r) { // si esta en miniscula
@@ -71,18 +78,6 @@ func doyFormato(palabra string) string {
 		} else {
 			nuevaPalabra.WriteRune(r) // si es un caracter especial lo dejo asi
 		}
-	}
-	return nuevaPalabra.String()
-}
-
-
-// PREGUNTAR ESTE
-/*
-func doyFormato(palabra string) string {
-	var nuevaPalabra strings.Builder
-	for i := 0; i < len(palabra); i++ { // hago un for para recorrer caracter por caracter
-		r := rune(palabra[i]) // transformo la palabra en runa
-		nuevaPalabra.WriteRune(unicode.SimpleFold(r)) // con el simplefold no necesito corroborar si es min o mayus ya que te da el inverso si o si
 	}
 	return nuevaPalabra.String()
 }
