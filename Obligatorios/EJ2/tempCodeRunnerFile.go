@@ -1,0 +1,1 @@
+// uso strings.Builder para crear la nueva frase a partir de runas
