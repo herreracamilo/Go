@@ -14,6 +14,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"unicode"
 )
 
 func main() {
@@ -48,11 +49,11 @@ func crearFrase(frase, palabraOriginal, palabraNueva string) string {
 
 func doyFormato(palabraOriginal, palabraNueva string) string {
 	var nuevaPalabra strings.Builder
-	for i := 0; i < len(palabraOriginal); i++ { // len te devuelve la cantidad de caracteres
-		if 'A' <= palabraOriginal[i] && palabraOriginal[i] <= 'Z' {
-			nuevaPalabra.WriteByte(palabraNueva[i] - ('a' - 'A')) // la resta es para que se ponga en mayuscula
+	for i, c:= range palabraOriginal{
+		if unicode.IsUpper(c) {
+			nuevaPalabra.WriteRune(unicode.ToUpper(rune(palabraNueva[i]))) // con el simplefold si esta en mayuscula lo pongo en miniscula
 		} else {
-			nuevaPalabra.WriteByte(palabraNueva[i]) // si no la tengo que poner en mayuscula, la escribo normal
+			nuevaPalabra.WriteRune((rune(palabraNueva[i]))) // si no la tengo que poner en mayuscula, la escribo normal
 		}
 	}
 	return nuevaPalabra.String()

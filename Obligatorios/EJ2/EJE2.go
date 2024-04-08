@@ -3,8 +3,6 @@ lugar de reemplazar la palabra “jueves” por “martes” ahora se
 reemplace “miércoles” por “automóvil”. Piense qué impacto tuvieron
 esas modificaciones en el programa que había realizado.*/
 
-
-
 package main
 
 import (
@@ -13,12 +11,13 @@ import (
 	"log"
 	"os"
 	"strings"
+	"unicode"
 )
 
 func main() {
     var frase string
 	read(&frase)
-	nuevaFrase := crearFrase(frase, "miercoles", "automovil")
+	nuevaFrase := crearFrase(frase, "miércoles", "automóvil")
 	fmt.Println(nuevaFrase)
 
 }
@@ -47,11 +46,13 @@ func crearFrase(frase, palabraOriginal, palabraNueva string) string {
 
 func doyFormato(palabraOriginal, palabraNueva string) string {
 	var nuevaPalabra strings.Builder
-	for i := 0; i < len(palabraOriginal); i++ { // len te devuelve la cantidad de caracteres
-		if 'A' <= palabraOriginal[i] && palabraOriginal[i] <= 'Z' {
-			nuevaPalabra.WriteByte(palabraNueva[i] - ('a' - 'A')) // la resta es para que se ponga en mayuscula
+	runaOriginal := []rune(palabraOriginal)
+	runaNueva := []rune(palabraNueva)
+	for i, c:= range runaOriginal{
+		if unicode.IsUpper(c) {
+			nuevaPalabra.WriteRune(unicode.ToUpper(runaNueva[i])) // pongo en mayuscula la letra de automóvil en el indice que esta mayuscula en miercoles
 		} else {
-			nuevaPalabra.WriteByte(palabraNueva[i]) // si no la tengo que poner en mayuscula, la escribo normal
+			nuevaPalabra.WriteRune(((runaNueva[i]))) // si no la tengo que poner en mayuscula, la escribo normal
 		}
 	}
 	return nuevaPalabra.String()
