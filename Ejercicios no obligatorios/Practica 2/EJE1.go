@@ -22,7 +22,6 @@ func main(){
 
 
 func read(temperatura *float64) {
-    //fmt.Println("Ingrese una temperatura:  ")
     _,err := fmt.Scanln(temperatura)
     if err != nil {
         log.Fatal(err)
