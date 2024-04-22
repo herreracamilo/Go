@@ -13,7 +13,7 @@ func main(){
 	baja:= 0.0
 	llenarVector(temperatura, (*[10]float64)(&vectorTemperaturas))
 	fmt.Println(vectorTemperaturas)
-	dividirGrupos((*[10]float64)(&vectorTemperaturas),alta,normal,baja)
+	dividirGrupos((*[10]float64)(&vectorTemperaturas),&alta,&normal,&baja)
 	fmt.Println(alta)
 	fmt.Println(normal)
 	fmt.Println(baja)
@@ -41,16 +41,16 @@ func llenarVector(temperatura float64, vectorTemperaturas *[10]float64){
 	}
 }
 
-func dividirGrupos(vectorTemperaturas *[10]float64, alta,normal,baja float64){
+func dividirGrupos(vectorTemperaturas *[10]float64, alta,normal,baja *float64){
 	i:=0
 	for {
 		switch {
 		case vectorTemperaturas[i] > 37.5:
-			alta+= vectorTemperaturas[i]
-		case vectorTemperaturas[i] > 36.00 && vectorTemperaturas[i] < 37.5:
-			normal+=vectorTemperaturas[i]
+			*alta+= vectorTemperaturas[i]
+		case vectorTemperaturas[i] >= 36.00 && vectorTemperaturas[i] <= 37.5:
+			*normal+=vectorTemperaturas[i]
 		case vectorTemperaturas[i] < 36.00:
-			baja+=vectorTemperaturas[i]
+			*baja+=vectorTemperaturas[i]
 		}
 		i++
 		if(i >= 10){
