@@ -18,12 +18,9 @@ func main(){
 	llenarVector((*[10]float64)(&vectorTemperaturas))
 	fmt.Println(vectorTemperaturas)
 	dividirGrupos((*[10]float64)(&vectorTemperaturas),&alta,&normal,&baja,&altaC,&normalC,&bajaC)
-	fmt.Print("El porcentaje de pacientes con alta temperatura es: ")
-	fmt.Println((altaC *10) / 10)
-	fmt.Print("El porcentaje de pacientes con temperatura normal es: ")
-	fmt.Println((normalC *10) / 10)
-	fmt.Print("El porcentaje de pacientes con baja temperatura es: ")
-	fmt.Println((bajaC *10) / 10) 
+	fmt.Println("El porcentaje de pacientes con alta temperatura es:",((altaC *10) / 10),"%")
+	fmt.Println("El porcentaje de pacientes con temperatura normal es:",((normalC *10) / 10),"%")
+	fmt.Println("El porcentaje de pacientes con baja temperatura es:",((bajaC *10) / 10),"%") 
 	
 	// para sacar el promedio entero entre la temp minima y maxima, ordeno el vector saco el minimo y el maximo y lo divido entre 2
 	tempSlices:= vectorTemperaturas[:]
