@@ -56,8 +56,7 @@ func llenarVector(vectorTemperaturas *[10]float64){
 }
 
 func dividirGrupos(vectorTemperaturas *[10]float64, alta,normal,baja *float64,altaC,normalC,bajaC *int){
-	i:=0
-	for {
+	for i:= 0; i<10; i++{
 		switch {
 		case vectorTemperaturas[i] > 37.5:
 			*alta+= vectorTemperaturas[i]
@@ -68,10 +67,6 @@ func dividirGrupos(vectorTemperaturas *[10]float64, alta,normal,baja *float64,al
 		case vectorTemperaturas[i] < 36.00:
 			*baja+=vectorTemperaturas[i]
 			*bajaC+=1
-		}
-		i++
-		if(i >= 10){
-			break
 		}
 	}
 }
