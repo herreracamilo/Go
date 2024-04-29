@@ -4,20 +4,23 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"sort"
 )
 
 const N = 5
+
 
 func main()  {
 	var arregloX[N]float64
 	var arregloY[N]float64
 	var arregloZ[N]float64
-	llenarVectores((*[5]float64)(&arregloX),(*[5]float64)(&arregloY),(*[5]float64)(&arregloZ))
-	fmt.Println(arregloX)
-	fmt.Println(arregloY)
-	fmt.Println(arregloZ)
-	fmt.Println(sumatoria((&arregloX)))
-	fmt.Println(productoria((&arregloZ)))
+	llenarVectores((&arregloX),(&arregloY),(&arregloZ))
+	min, max := maxYmin((&arregloY))
+	R:= (sumatoria(&arregloX)-productoria(&arregloZ)*(max*min))
+	fmt.Print("El resultado del problema es --> ")
+	fmt.Print(R)
+
+
 }
 
 func read(valor *float64) {
@@ -53,6 +56,14 @@ func productoria(arregloZ *[N]float64) float64  {
 		result+= math.Pow(arregloZ[i],3.00)
 	}
 	return result
+}
+
+func maxYmin(arregloY *[N]float64) (float64,float64 )  {
+	sliceX:= arregloY[:]
+	sort.Float64s(sliceX)
+	min:= sliceX[0]
+	max:= sliceX[len(sliceX)-1]
+	return min, max
 }
 
 
