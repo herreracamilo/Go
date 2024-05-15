@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
 	"reflect"
 )
 
@@ -68,11 +66,11 @@ func Next(self List) List {
 	if IsEmpty(l) {
 		return "[]"
 	} else {
-		s := fmt.Sprintf("(%v)", l.elem) // convierte l.elem a una cadena con %v, preguntar la diferencia de usar fmt.println
+		s := fmt.Sprintf("(%v)\n", l.elem) // convierte l.elem a una cadena con %v, preguntar la diferencia de usar fmt.println
 		if Next(l) == nil {
 			return s
 		}
-		return s + "->" + ToString(Next(l))
+		return s + " " + ToString(Next(l))
 	}
 }
 
@@ -116,27 +114,108 @@ func Iterate(self List, fp func(int) int) {
 	}
 }
 
-func main() {
-	// Abrir el archivo JSON
-	file, err := os.Open("ingresantes.json")
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	// Decodificar el archivo JSON en un slice de ingresantes
-	var ingresantes []Ingresante
-	decoder := json.NewDecoder(file)
-	if err := decoder.Decode(&ingresantes); err != nil {
-		panic(err)
-	}
-
-	// Convertir el slice de ingresantes en una lista de nodos
-	var lista List
-	for _, ingresante := range ingresantes {
-		PushBack(&lista, ingresante)
-	}
-
-	// Imprimir la lista de ingresantes
-	fmt.Println(ToString(lista))
+func sumoYears(lista List,yearMap map[int]int)  {
+		if ingresante,ok := lista.elem.(Ingresante); ok{
+			year:= ingresante.fecha.anio
+			yearMap[year]++
+		}
 }
+
+func sumoCarrera(lista List,mapCarrera map[string]int )  {
+	if ingresante,ok:=lista.elem.(Ingresante);ok{
+		switch ingresante.codigoCarrera{
+		case "APU":
+			mapCarrera["APU"]++
+		case "LI":
+			mapCarrera["LI"]++
+		case "LS":
+			mapCarrera["LS"]++
+		}
+	}
+}
+
+func proceso(lista List, yearMap map[int]int,mapCarrera map[string]int)  {
+	aux:=lista
+	for !IsEmpty(aux){
+		if ingresante, ok := aux.elem.(Ingresante); ok {
+			if ingresante.ciudadOrigen == "Bariloche" {
+				fmt.Println(ingresante.String())
+			}
+			sumoYears(aux, yearMap)
+			sumoCarrera(aux, mapCarrera)
+			
+		}
+		aux = Next(aux)
+	}
+}
+
+func main() {
+	ingresante1 := Ingresante{
+		apellido:       "García",
+		nombre:         "Juan",
+		ciudadOrigen:   "Buenos Aires",
+		fecha:          Fecha{dia: 15, mes: 5, anio: 1990},
+		presentoTitulo: true,
+		codigoCarrera:  "APU",
+	}
+
+	ingresante2 := Ingresante{
+		apellido:       "López",
+		nombre:         "María",
+		ciudadOrigen:   "Córdoba",
+		fecha:          Fecha{dia: 20, mes: 10, anio: 1992},
+		presentoTitulo: false,
+		codigoCarrera:  "LI",
+	}
+
+	ingresante3 := Ingresante{
+		apellido:       "López",
+		nombre:         "María",
+		ciudadOrigen:   "Córdoba",
+		fecha:          Fecha{dia: 20, mes: 10, anio: 1992},
+		presentoTitulo: false,
+		codigoCarrera:  "LI",
+	}
+
+	ingresante4 := Ingresante{
+		apellido:       "Martinez",
+		nombre:         "Ana",
+		ciudadOrigen:   "Bariloche",
+		fecha:          Fecha{dia: 10, mes: 8, anio: 1993},
+		presentoTitulo: true,
+		codigoCarrera:  "LS",
+	}
+
+	ingresante5 := Ingresante{
+		apellido:       "Perez",
+		nombre:         "Carlos",
+		ciudadOrigen:   "Bariloche",
+		fecha:          Fecha{dia: 5, mes: 4, anio: 1991},
+		presentoTitulo: false,
+		codigoCarrera:  "APU",
+	}
+	var lista List
+	mapYear:= make(map[int]int)
+	mapCarrera:= map[string]int{
+		"APU": 0,
+		"LI": 0,
+		"LS": 0,
+	}
+
+	PushBack(&lista, ingresante1)
+	PushBack(&lista, ingresante2)
+	PushBack(&lista, ingresante3)
+	PushBack(&lista, ingresante4)
+	PushBack(&lista, ingresante5)
+	
+	proceso(lista,mapYear,mapCarrera)
+	fmt.Println(" ")
+	fmt.Println(mapYear)
+	fmt.Println(" ")
+	fmt.Println(mapCarrera)
+	fmt.Println(" ")
+	fmt.Println(lista)
+
+
+}
+
