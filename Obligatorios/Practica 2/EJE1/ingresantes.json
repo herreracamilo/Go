@@ -1,0 +1,123 @@
+[
+    {
+      "apellido": "González",
+      "nombre": "María",
+      "ciudadOrigen": "Formosa",
+      "fecha": {"dia": 15, "mes": 5, "anio": 1990},
+      "presentoTitulo": true,
+      "codigoCarrera": "APU"
+    },
+    {
+      "apellido": "Pérez",
+      "nombre": "Juan",
+      "ciudadOrigen": "Córdoba",
+      "fecha": {"dia": 20, "mes": 8, "anio": 1992},
+      "presentoTitulo": false,
+      "codigoCarrera": "LS"
+    },
+    {
+      "apellido": "Martínez",
+      "nombre": "Carlos",
+      "ciudadOrigen": "Bariloche",
+      "fecha": {"dia": 10, "mes": 3, "anio": 1988},
+      "presentoTitulo": true,
+      "codigoCarrera": "LI"
+    },
+    {
+      "apellido": "López",
+      "nombre": "Ana",
+      "ciudadOrigen": "Formosa",
+      "fecha": {"dia": 5, "mes": 12, "anio": 1995},
+      "presentoTitulo": false,
+      "codigoCarrera": "APU"
+    },
+    {
+      "apellido": "Sánchez",
+      "nombre": "Diego",
+      "ciudadOrigen": "Rosario",
+      "fecha": {"dia": 25, "mes": 10, "anio": 1993},
+      "presentoTitulo": true,
+      "codigoCarrera": "LI"
+    },
+    {
+      "apellido": "Rodríguez",
+      "nombre": "Laura",
+      "ciudadOrigen": "Bariloche",
+      "fecha": {"dia": 8, "mes": 6, "anio": 1991},
+      "presentoTitulo": true,
+      "codigoCarrera": "LS"
+    },
+    {
+      "apellido": "Gómez",
+      "nombre": "José",
+      "ciudadOrigen": "Mendoza",
+      "fecha": {"dia": 12, "mes": 9, "anio": 1994},
+      "presentoTitulo": false,
+      "codigoCarrera": "APU"
+    },
+    {
+      "apellido": "Fernández",
+      "nombre": "Marcela",
+      "ciudadOrigen": "Bariloche",
+      "fecha": {"dia": 18, "mes": 4, "anio": 1993},
+      "presentoTitulo": true,
+      "codigoCarrera": "LI"
+    },
+    {
+      "apellido": "Díaz",
+      "nombre": "Mariano",
+      "ciudadOrigen": "Formosa",
+      "fecha": {"dia": 30, "mes": 1, "anio": 1987},
+      "presentoTitulo": false,
+      "codigoCarrera": "LS"
+    },
+    {
+      "apellido": "Alvarez",
+      "nombre": "Lucía",
+      "ciudadOrigen": "Buenos Aires",
+      "fecha": {"dia": 3, "mes": 11, "anio": 1996},
+      "presentoTitulo": true,
+      "codigoCarrera": "APU"
+    },
+    {
+      "apellido": "Romero",
+      "nombre": "Andrés",
+      "ciudadOrigen": "Bariloche",
+      "fecha": {"dia": 22, "mes": 7, "anio": 1990},
+      "presentoTitulo": true,
+      "codigoCarrera": "LI"
+    },
+    {
+      "apellido": "Torres",
+      "nombre": "Silvia",
+      "ciudadOrigen": "Santa Fe",
+      "fecha": {"dia": 9, "mes": 2, "anio": 1989},
+      "presentoTitulo": false,
+      "codigoCarrera": "LS"
+    },
+    {
+      "apellido": "Suárez",
+      "nombre": "Roberto",
+      "ciudadOrigen": "Bariloche",
+      "fecha": {"dia": 14, "mes": 10, "anio": 1997},
+      "presentoTitulo": true,
+      "codigoCarrera": "APU"
+    },
+    {
+      "apellido": "Paz",
+      "nombre": "Valentina",
+      "ciudadOrigen": "Formosa",
+      "fecha": {"dia": 17, "mes": 3, "anio": 1994},
+      "presentoTitulo": false,
+      "codigoCarrera": "LI"
+    },
+    {
+      "apellido": "Ramos",
+      "nombre": "Florencia",
+      "ciudadOrigen": "Neuquén",
+      "fecha": {"dia": 6, "mes": 9, "anio": 1991},
+      "presentoTitulo": true,
+      "codigoCarrera": "LS"
+    }
+  ]
+  
