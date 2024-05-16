@@ -31,99 +31,123 @@ func (i Ingresante) String() string {
 }
 
 type Node struct {
-	elem    any // interface{}
-	next    *Node
+	elem any 
+	next *Node
+	prev *Node
 }
 
-type List *Node
+type List struct {
+	head *Node
+	tail *Node
+}
 
 func New() List {
-	return (List(nil));
+	return List{nil, nil}
 }
 
 func IsEmpty(self List) bool {
-	return (self == nil)
-  }
+	return self.head == nil
+}
 
 // devuelve la longitud de la lista
 func Len(self List) int {
-  if (IsEmpty(self)) {
-      return 0;
-    } else {
-    return 1 + Len(Next(self));
-  }
+	length := 0
+	for current := self.head; current != nil; current = current.next {
+		length++
+	}
+	return length
 }
 
 func FrontElement(self List) any {
-	return self.elem
+	if IsEmpty(self) {
+		return nil
+	}
+	return self.head.elem
 }
 
-func Next(self List) List {
-	return self.next
-  }
+func Next(self List) *Node {
+	if IsEmpty(self) {
+		return nil
+	}
+	return self.head.next
+}
 
-  func ToString(l List) string {
+func ToString(l List) string {
 	if IsEmpty(l) {
 		return "[]"
-	} else {
-		s := fmt.Sprintf("(%v)\n", l.elem) // convierte l.elem a una cadena con %v, preguntar la diferencia de usar fmt.println
-		if Next(l) == nil {
-			return s
-		}
-		return s + " " + ToString(Next(l))
 	}
+	result := ""
+	for current := l.head; current != nil; current = current.next {
+		result += fmt.Sprintf("(%v)\n", current.elem)
+	}
+	return result
 }
 
-
 func PushFront(self *List, elem any) {
-	aux := new(Node)
-	aux.elem = elem
-	aux.next = *self
-	*self = aux
+	aux := &Node{elem: elem, next: self.head, prev: nil}
+	if IsEmpty(*self) {
+		self.tail = aux
+	} else {
+		self.head.prev = aux
+	}
+	self.head = aux
 }
 
 func PushBack(self *List, elem any) {
-	if (IsEmpty(*self)) {
-		aux := new(Node)
-		aux.elem = elem
-		aux.next = nil
-		*self = aux
+	aux := &Node{elem: elem, next: nil, prev: self.tail}
+	if IsEmpty(*self) {
+		self.head = aux
 	} else {
-		PushBack( (*List)(&((*self).next)) ,elem )
+		self.tail.next = aux
 	}
+	self.tail = aux
 }
 
-func Remove(self *List) any {
-	elem := (*self).elem
-	//aux  := (*self)
-	*self = (List)(((*self).next))
-	return elem;
+func Remove(self *List, actual *Node) {
+	if actual == nil || IsEmpty(*self) {
+		return
+	}
+	if actual == self.head {
+		self.head = actual.next
+		if self.head != nil {
+			self.head.prev = nil
+		} else {
+			self.tail = nil
+		}
+	} else if actual == self.tail {
+		self.tail = actual.prev
+		if self.tail != nil {
+			self.tail.next = nil
+		} else {
+			self.head = nil
+		}
+	} else {
+		actual.prev.next = actual.next
+		actual.next.prev = actual.prev
+	}
 }
 
 func Iterate(self List, fp func(int) int) {
-	aux := self
-	for !IsEmpty(aux) {
-		if elem, ok := aux.elem.(int); ok { // Hacemos la aserción de tipo aquí
-			aux.elem = fp(elem)
+	for current := self.head; current != nil; current = current.next {
+		if elem, ok := current.elem.(int); ok {
+			current.elem = fp(elem)
 		} else {
-			// Manejar el caso en que aux.elem no es un int
-			actualType := reflect.TypeOf(aux.elem)
-            panic(fmt.Sprintf("aux.elem no es un int, es de tipo %v", actualType))
+			actualType := reflect.TypeOf(current.elem)
+			panic(fmt.Sprintf("current.elem no es un int, es de tipo %v", actualType))
 		}
-		aux = Next(aux)
 	}
 }
 
-func sumoYears(lista List,yearMap map[int]int)  {
-		if ingresante,ok := lista.elem.(Ingresante); ok{
-			year:= ingresante.fecha.anio
-			yearMap[year]++
-		}
+func sumoYears(lista *Node, yearMap map[int]int) {
+	if ingresante, ok := lista.elem.(Ingresante); ok {
+		year := ingresante.fecha.anio
+		yearMap[year]++
+	}
 }
 
-func sumoCarrera(lista List,mapCarrera map[string]int )  {
-	if ingresante,ok:=lista.elem.(Ingresante);ok{
-		switch ingresante.codigoCarrera{
+func sumoCarrera(lista *Node, mapCarrera map[string]int) {
+	if ingresante, ok := lista.elem.(Ingresante); ok {
+		switch ingresante.codigoCarrera {
 		case "APU":
 			mapCarrera["APU"]++
 		case "LI":
@@ -134,18 +158,20 @@ func sumoCarrera(lista List,mapCarrera map[string]int )  {
 	}
 }
 
-func proceso(lista List, yearMap map[int]int,mapCarrera map[string]int)  {
-	aux:=lista
-	for !IsEmpty(aux){
-		if ingresante, ok := aux.elem.(Ingresante); ok {
+func proceso(lista *List, yearMap map[int]int, mapCarrera map[string]int) {
+	for current := lista.head; current != nil; current = current.next {
+		if ingresante, ok := current.elem.(Ingresante); ok {
 			if ingresante.ciudadOrigen == "Bariloche" {
 				fmt.Println(ingresante.String())
 			}
-			sumoYears(aux, yearMap)
-			sumoCarrera(aux, mapCarrera)
-			
+			sumoYears(current, yearMap)
+			sumoCarrera(current, mapCarrera)
+			if !ingresante.presentoTitulo {
+				toRemove := current
+				current = current.prev // Move back before removing
+				Remove(lista, toRemove)
+			}
 		}
-		aux = Next(aux)
 	}
 }
 
@@ -169,10 +195,10 @@ func main() {
 	}
 
 	ingresante3 := Ingresante{
-		apellido:       "López",
-		nombre:         "María",
-		ciudadOrigen:   "Córdoba",
-		fecha:          Fecha{dia: 20, mes: 10, anio: 1992},
+		apellido:       "Vergara",
+		nombre:         "Jose Maria",
+		ciudadOrigen:   "Santa Fé",
+		fecha:          Fecha{dia: 1, mes: 12, anio: 2003},
 		presentoTitulo: false,
 		codigoCarrera:  "LI",
 	}
@@ -208,13 +234,13 @@ func main() {
 	PushBack(&lista, ingresante4)
 	PushBack(&lista, ingresante5)
 	
-	proceso(lista,mapYear,mapCarrera)
+	proceso(&lista,mapYear,mapCarrera)
 	fmt.Println(" ")
 	fmt.Println(mapYear)
 	fmt.Println(" ")
 	fmt.Println(mapCarrera)
 	fmt.Println(" ")
-	fmt.Println(lista)
+	fmt.Println(ToString(lista))
 
 
 }
