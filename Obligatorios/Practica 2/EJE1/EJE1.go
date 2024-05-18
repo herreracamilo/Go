@@ -168,7 +168,7 @@ func proceso(lista *List, yearMap map[int]int, mapCarrera map[string]int) {
 			sumoCarrera(current, mapCarrera)
 			if !ingresante.presentoTitulo {
 				toRemove := current
-				current = current.prev // Move back before removing
+				current = current.prev //pongo como actual al aterior
 				Remove(lista, toRemove)
 			}
 		}
