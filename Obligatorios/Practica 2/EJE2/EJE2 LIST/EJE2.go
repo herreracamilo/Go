@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"time"
+	"container/list"
 )
 
 type Transaccion struct{
@@ -28,8 +29,10 @@ type Wallet struct{
 }
 
 type Blockchain struct{
-	Blocks []Block
+	Blocks *list.List
 }
+
+// LIST
 
 func createWallet(nombre,apellido string) Wallet {
 	datos:= nombre + apellido + time.Now().String()
@@ -51,10 +54,10 @@ func sendTransaction(blockchain *Blockchain, senderId,reciverId string, monto fl
 	}
 
 	var prevHash string
-	if len(blockchain.Blocks)== 0{
-		prevHash = "nil" // si es el primero y el hash anterior no existe pongo en blanco
+	if (blockchain.Blocks.Len())== 0{
+		prevHash = "empty" // si es el primero y el hash anterior no existe pongo en blanco
 	}else{
-		prevHash = blockchain.Blocks[len(blockchain.Blocks)-1].Hash // agarro el hash del anterior
+		prevHash = blockchain.Blocks.Back().Value.(Block).Hash // agarro el hash del anterior
 	}
 
 	block := Block{
@@ -68,13 +71,23 @@ func sendTransaction(blockchain *Blockchain, senderId,reciverId string, monto fl
 	hash.Write([]byte(fmt.Sprintf("%v",block)))
 	block.Hash = hex.EncodeToString(hash.Sum(nil))
 
-	// agrando el slice y lo meto al block
-	blockchain.Blocks = append(blockchain.Blocks, block)
+	// lo meto al block
+	blockchain.Blocks.PushBack(block)
+}
+
+func insertBroken(bc *Blockchain, pos int)  {
+	valid := true
+	if bc.Blocks.Len() < pos{
+		valid = false
+	}
+	
 }
 
 
 func main()  {
-	bc:= Blockchain{}
+	bc := &Blockchain{
+		Blocks: list.New(),
+	}
 
 	wallet1:=createWallet("camilo","herrera")
 	wallet2:=createWallet("micaela","d'agostino")
@@ -82,15 +95,15 @@ func main()  {
 	wallet4:=createWallet("morena","herrera")
 	wallet5:=createWallet("tomas","rivas")
 	
-	sendTransaction(&bc,wallet1.ID, wallet2.ID,777.99)
-	sendTransaction(&bc,wallet4.ID, wallet3.ID,9983.99)
-	sendTransaction(&bc,wallet5.ID, wallet1.ID,63441.99)
-
-	// recorro e imprimo la blockchain
-	for i := len(bc.Blocks) - 1; i >= 0; i-- {
-		block := bc.Blocks[i]
-		fmt.Printf("Block: %v\n", block)
-		fmt.Println(" ")
-	}
+	sendTransaction(bc,wallet1.ID, wallet2.ID,777.99)
+	sendTransaction(bc,wallet4.ID, wallet3.ID,9983.99)
+	sendTransaction(bc,wallet5.ID, wallet1.ID,63441.99)
 	
+	for e := bc.Blocks.Front(); e != nil; e = e.Next() {
+		block := e.Value.(Block)
+		fmt.Printf("Hash: %s, HashPrev: %s, Monto: %f, IDEnvio: %s, IDRecibo: %s, Fecha: %s\n",
+			block.Hash, block.HashPrev, block.Data.Monto, block.Data.IDEnvio, block.Data.IDRecibo, block.Fecha)
+		fmt.Println(" ")
+	
+	}
 }
