@@ -26,6 +26,8 @@ type Wallet struct{
 	ID string
 	Nombre string
 	Apellido string
+	SaldoInicial float64
+	SaldoActual float64
 }
 
 type Blockchain struct{
@@ -75,14 +77,51 @@ func sendTransaction(blockchain *Blockchain, senderId,reciverId string, monto fl
 	blockchain.Blocks.PushBack(block)
 }
 
-func insertBroken(bc *Blockchain, pos int)  {
-	valid := true
-	if bc.Blocks.Len() < pos{
-		valid = false
+// el profesor del miercoles me dijo que no es necesario tener un SaldoActual y SaldoInicial en el struct porque puede generar errores
+func obtenerSaldo(bc *Blockchain, w Wallet) float64  {
+	saldo:=0.0
+	for e := bc.Blocks.Front(); e != nil; e = e.Next() {
+		block:=e.Value.(Block)
+		if(block.Data.IDEnvio == w.ID){
+			saldo-= block.Data.Monto
+		}
+		if(block.Data.IDRecibo == w.ID){
+			saldo+= block.Data.Monto
+		}
 	}
-	
+	return saldo
 }
 
+
+func checkHash(bc *Blockchain) bool {
+	for e := bc.Blocks.Front(); e != nil && e.Next() != nil; e = e.Next(){
+		actual:= e.Value.(Block).Hash
+		next:= e.Next().Value.(Block).HashPrev
+		if(actual != next){
+			return false
+		}
+	}
+	return true
+}
+
+func validarTransaccion(bc *Blockchain, wEnvia,wRecibe Wallet,monto float64) bool {
+	saldo:= obtenerSaldo(bc,wEnvia)
+	if(monto <= saldo){
+		sendTransaction(bc,wEnvia.ID,wRecibe.ID,monto)
+		return true
+	}
+	return false
+}
+
+func printList(bc *Blockchain)  {
+	for e := bc.Blocks.Front(); e != nil; e = e.Next() {
+		block := e.Value.(Block)
+		fmt.Printf("Hash: %s, HashPrev: %s, Monto: %.2f, IDEnvio: %s, IDRecibo: %s, Fecha: %s\n",
+			block.Hash, block.HashPrev, block.Data.Monto, block.Data.IDEnvio, block.Data.IDRecibo, block.Fecha)
+		fmt.Println(" ")
+	
+	}
+}
 
 func main()  {
 	bc := &Blockchain{
@@ -96,14 +135,14 @@ func main()  {
 	wallet5:=createWallet("tomas","rivas")
 	
 	sendTransaction(bc,wallet1.ID, wallet2.ID,777.99)
-	sendTransaction(bc,wallet4.ID, wallet3.ID,9983.99)
+	sendTransaction(bc,wallet1.ID, wallet3.ID,9983.99)
 	sendTransaction(bc,wallet5.ID, wallet1.ID,63441.99)
 	
-	for e := bc.Blocks.Front(); e != nil; e = e.Next() {
-		block := e.Value.(Block)
-		fmt.Printf("Hash: %s, HashPrev: %s, Monto: %f, IDEnvio: %s, IDRecibo: %s, Fecha: %s\n",
-			block.Hash, block.HashPrev, block.Data.Monto, block.Data.IDEnvio, block.Data.IDRecibo, block.Fecha)
-		fmt.Println(" ")
-	
-	}
+
+	printList(bc)
+
+	fmt.Println(obtenerSaldo(bc,wallet1))
+	fmt.Println(checkHash(bc))
+	fmt.Println(validarTransaccion(bc,wallet1,wallet4,10000))
+
 }
