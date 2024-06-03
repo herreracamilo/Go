@@ -125,7 +125,7 @@ func main()  {
 	fmt.Println(newS)
 	fmt.Println(Len(newS))
 	fmt.Println(LastElement(newS))
-	Insert(&newS,3,5)
+	Insert(&newS,88,3)
 	fmt.Println(newS)
 	optimToNormal:= SliceArray(newS)
 	fmt.Println(optimToNormal)

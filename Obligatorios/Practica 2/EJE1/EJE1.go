@@ -216,7 +216,7 @@ func main() {
 		apellido:       "Perez",
 		nombre:         "Carlos",
 		ciudadOrigen:   "Bariloche",
-		fecha:          Fecha{dia: 5, mes: 4, anio: 1991},
+		fecha:          Fecha{dia: 5, mes: 4, anio: 1993},
 		presentoTitulo: false,
 		codigoCarrera:  "APU",
 	}
