@@ -5,7 +5,6 @@ import (
 	"math/rand"
 	"sync"
 	"time"
-	//"sync"
 )
 
 func productor(number chan<-int, wg *sync.WaitGroup)  {
