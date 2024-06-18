@@ -1,4 +1,4 @@
- #  𝗘𝗷𝗲𝗿𝗰𝗶𝗰𝗶𝗼𝘀 𝗚𝗼
+ # 𝗚𝗼
 <p align="center">
   <img src= "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrmDKt0Qi65ILAvNv9Pw6mOzOrH33w3Biz5g&s" alt = "Go"/>
 </p>
