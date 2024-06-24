@@ -1,0 +1,53 @@
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"sync"
+	"time"
+)
+
+type Cliente struct{
+	num int
+}
+
+type Caja struct{
+	num int
+}
+
+func main()  {
+	rand.Seed(time.Now().UnixNano()) // random
+
+	numCajas:= 3;
+	numClientes:=10;
+
+	cola := make(chan Cliente,numClientes)
+
+	var wg sync.WaitGroup
+
+	for i := 1; i <= numCajas; i++ {
+		caja:= &Caja{num: i}
+
+		go func(c *Caja)  {
+			for cliente:= range cola{
+				wg.Add(1)
+				c.atender(cliente,&wg)
+			}
+		}(caja)
+	}
+
+	for i := 0; i <= numClientes; i++ {
+		cola <- Cliente{num: i}
+	}
+	close(cola)
+	wg.Wait()
+	fmt.Println("Todos los clientes han sido atendidos")
+}
+
+func (c *Caja) atender(cliente Cliente, wg *sync.WaitGroup)  {
+	defer wg.Done()// manda que terminó
+
+	fmt.Printf("La caja %d está atendiendo al cliente %d\n", c.num, cliente.num)
+	time.Sleep(time.Duration(rand.Intn(2))*time.Second)
+	fmt.Printf("La caja %d terminó de atender\n", c.num)
+}

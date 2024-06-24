@@ -1,22 +1,26 @@
 package main
 
 import (
+	"container/list"
 	"fmt"
 	"log"
-	"container/list"
+	"time"
 )
 
 func main(){
 	var n int
 	read(&n)
 
+	start := time.Now() // Inicio de la medición de tiempo
+
 	canal := make(chan *list.List) //creo el canal
 
 	go addPrimos(n, canal)
 
 	primos := <- canal  // aca declaro y recibo la lista a partir del canal
-
+	duration := time.Since(start) // Fin de la medición de tiempo
 	printPrimos(primos)
+	fmt.Printf("Tiempo con 1 goroutines: %v\n", duration)
 
 }
 
