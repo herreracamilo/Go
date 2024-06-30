@@ -18,7 +18,7 @@ type Caja struct {
 
 func main() {
 	rand.Seed(time.Now().UnixNano()) // random
-
+	start := time.Now() // Inicio de la medición de tiempo
 	numCajas := 3
 	numClientes := 15
 
@@ -52,7 +52,9 @@ func main() {
 	}
 
 	wg.Wait()
+	duration := time.Since(start) // Fin de la medición de tiempo
 	fmt.Println("Todos los clientes han sido atendidos")
+	fmt.Printf("Tiempo con 1 goroutines: %v\n", duration)
 }
 
 func (c *Caja) atender(cliente Cliente, wg *sync.WaitGroup) {
