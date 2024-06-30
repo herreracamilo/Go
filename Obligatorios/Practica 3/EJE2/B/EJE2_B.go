@@ -7,43 +7,55 @@ import (
 	"time"
 )
 
-type Cliente struct{
+type Cliente struct {
 	num int
 }
 
-type Caja struct{
-	num int
+type Caja struct {
+	num  int
+	cola chan Cliente
 }
 
-func main()  {
-	rand.Seed(time.Now().UnixNano()) // random
-
-	numCajas:= 3;
-	numClientes:=10;
-
-	cola := make(chan Cliente,numClientes)
-
+func main() {
+	rand.Seed(time.Now().UnixNano())
 	var wg sync.WaitGroup
 
-	for i := 1; i <= numCajas; i++ {
-		caja:= &Caja{num: i}
+	numCajas := 3
+	numClientes := 10
 
-		go func(c *Caja)  {
-			for cliente:= range cola{
-				wg.Add(1)
-				c.atender(cliente,&wg)
+	cajas := make([]*Caja, numCajas)
+
+	// creo un canal para cada cola
+	for i := 0; i < numCajas; i++ { 
+		cajas[i] = &Caja{
+			num:  i + 1,
+			cola: make(chan Cliente, numClientes),
+		}
+
+		// Cada caja atiende clientes en su cola individual
+		go func(c *Caja) {
+			for cliente := range c.cola {
+				c.atender(cliente, &wg)
 			}
-		}(caja)
+		}(cajas[i])
 	}
 
-	for i := 0; i <= numClientes; i++ {
-		cola <- Cliente{num: i}
+	// le doy un cliente a las cajas forma round-robin
+	for i := 0; i < numClientes; i++ {
+		cliente := Cliente{num: i + 1}
+		indiceCaja := i % numCajas
+		wg.Add(1) // agregar wg antes de enviar al canal
+		cajas[indiceCaja].cola <- cliente
 	}
-	close(cola)
+
+	// cierro las cajas
+	for _, caja := range cajas {
+		close(caja.cola)
+	}
+
 	wg.Wait()
 	fmt.Println("Todos los clientes han sido atendidos")
 }
-
 func (c *Caja) atender(cliente Cliente, wg *sync.WaitGroup)  {
 	defer wg.Done()// manda que terminó
 
